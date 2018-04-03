@@ -1,0 +1,82 @@
+<style type="text/css">
+  .nfoblock {
+    border: solid 1px #b3b3b3;
+  }
+  .row {
+    margin: 0 0 5px 5px;
+  }
+  .column {
+    display: inline-block;
+  }
+  .textright {
+    text-align: right;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+<<h2>Тренировка</h2>
+<<h3>Спортсмен</h3>
+<div class="nfoblock">
+  <div class="row column">
+    <div>ФИО</div>
+    {{input value=athleteName readonly=true}}
+  </div>
+  <div class="row column">
+    <div>Возраст</div>
+    {{input class="textright" value=athleteAge readonly=true}}
+  </div>
+</div>
+<h3>Подходы</h3>
+<div class="nfoblock">
+  <div class="row column">
+    <div>№</div>
+  </div>
+  <div class="row column">
+    <div>Упражнение</div>
+  </div>
+  <div class="row column">
+    <div>Продолжительность</div>
+  </div>
+  <div class="row column">
+    <div>Средний пульс</div>
+  </div>
+  <div class="row column">
+    <div>Плановая нагрузка</div>
+  </div>
+  <div class="row column">
+    <div>Фактическая нагрузка</div>
+  </div>
+  {{#each model.workup.workupSetSheet as |workupSet|}}
+    {{workup-set model=workupSet onComplete=(action "completeEdit") onCancel=(action "cancelEdit")}}
+  {{/each}}
+  <div class="row {{if isEditMode 'hidden'}}">
+    <button {{action "add"}}>Add</button>
+    <button {{action "remove"}} disabled={{isRemoveProhibited}}>Remove</button>
+    <button {{action "up"}} disabled={{isUpProhibited}}>Up</button>
+    <button {{action "down"}} disabled={{isDownProhibited}}>Down</button>
+  </div>
+</div>
+<h3>Суммарная информация</h3>
+<div class="nfoblock">
+  <div class="row column">
+    <div>К-во подходов</div>
+    {{input class="textright" value=model.workup.workupSetSheet.length readonly=true}}
+  </div>
+  <div class="row column">
+    <div>Продолжительность</div>
+    {{input class="textright" value=summary readonly=true}}
+  </div>
+  <div class="row column">
+    <div>Средний пульс</div>
+    {{input class="textright" value=athleteAge readonly=true}}
+  </div>
+  <div class="row column">
+    <div>Плановая нагрузка</div>
+    {{input class="textright" value=athleteAge readonly=true}}
+  </div>
+  <div class="row column">
+    <div>Фактическая нагрузка</div>
+    {{input class="textright" value=athleteAge readonly=true}}
+  </div>
+</div>

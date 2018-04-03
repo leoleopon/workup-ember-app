@@ -1,0 +1,27 @@
+{{yield}}
+<div>
+  <div class="row column">{{input value=index readonly=true}}</div>
+  {{#if isEditMode}}
+    <div class="row column">
+      <select onchange={{action "exerciseSelected" value="target.value"}}>
+        {{#each model.exerciseSheet as |exercise|}}
+          <option value={{exercise}}>{{exercise.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+  {{else}}
+    <div class="row column">{{input value=model.exercise.name readonly=true}}</div>
+  {{/if}}
+  <div class="row column">{{input value=duration readonly=(if isEditMode unefind true)}}</div>
+  <div class="row column">{{input class="textright" value=model.averagePulse readonly=(if isEditMode undefind true)}}</div>
+  <div class="row column">{{input class="textright" value=estimatedScore readonly=true}}</div>
+  <div class="row column">{{input class="textright" value=actualScore readonly=true}}</div>
+  {{#if isEditMode}}
+  <div>
+    <div class="row">
+      <button {{action "ok"}}>Ok</button>
+      <button {{action "cancel"}}>Cancel</button>
+    </div>
+  </div>
+  {{/if}}
+</div>
