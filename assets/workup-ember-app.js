@@ -198,8 +198,8 @@ define('workup-ember-app/controllers/workup', ['exports', 'ember', 'workup-ember
       this.set('count', summary.count);
       this.set('duration', summary.duration);
       this.set('averagePulse', summary.averagePulse);
-      this.set('estimatedScore', Math.round(summary.estimatedScore * 10) / 10);
-      this.set('actualScore', Math.round(summary.actualScore * 10) / 10);
+      this.set('estimatedScore', summary.estimatedScore === null ? null : Math.round(summary.estimatedScore * 10) / 10);
+      this.set('actualScore', summary.actualScore === null ? null : Math.round(summary.actualScore * 10) / 10);
     },
 
     actions: {
@@ -902,7 +902,7 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
               "column": 0
             },
             "end": {
-              "line": 41,
+              "line": 40,
               "column": 0
             }
           },
@@ -937,8 +937,6 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "row");
-          var el2 = dom.createTextNode("\n  ");
-          dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
@@ -972,7 +970,7 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
             "column": 0
           },
           "end": {
-            "line": 42,
+            "line": 41,
             "column": 0
           }
         },
@@ -1055,7 +1053,7 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", ["row ", ["subexpr", "if", [["get", "isSelected", ["loc", [null, [1, 21], [1, 31]]]], "selected"], [], ["loc", [null, [1, 16], [1, 44]]]], " ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [1, 50], [1, 60]]]], "editmode"], [], ["loc", [null, [1, 45], [1, 73]]]]]]], ["attribute", "value", ["get", "sequence", ["loc", [null, [3, 67], [3, 75]]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [5, 8], [5, 18]]]]], [], 0, 1, ["loc", [null, [5, 2], [26, 9]]]], ["attribute", "value", ["get", "estimatedScore", ["loc", [null, [28, 67], [28, 81]]]]], ["attribute", "value", ["get", "actualScore", ["loc", [null, [31, 67], [31, 78]]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [34, 6], [34, 16]]]]], [], 2, null, ["loc", [null, [34, 0], [41, 7]]]]],
+      statements: [["attribute", "class", ["concat", ["row ", ["subexpr", "if", [["get", "isSelected", ["loc", [null, [1, 21], [1, 31]]]], "selected"], [], ["loc", [null, [1, 16], [1, 44]]]], " ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [1, 50], [1, 60]]]], "editmode"], [], ["loc", [null, [1, 45], [1, 73]]]]]]], ["attribute", "value", ["get", "sequence", ["loc", [null, [3, 67], [3, 75]]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [5, 8], [5, 18]]]]], [], 0, 1, ["loc", [null, [5, 2], [26, 9]]]], ["attribute", "value", ["get", "estimatedScore", ["loc", [null, [28, 67], [28, 81]]]]], ["attribute", "value", ["get", "actualScore", ["loc", [null, [31, 67], [31, 78]]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [34, 6], [34, 16]]]]], [], 2, null, ["loc", [null, [34, 0], [40, 7]]]]],
       locals: [],
       templates: [child0, child1, child2]
     };
@@ -1119,7 +1117,7 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 117,
+            "line": 120,
             "column": 0
           }
         },
@@ -1306,27 +1304,39 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         var el2 = dom.createElement("div");
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("button");
-        var el4 = dom.createTextNode("Add");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "column");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("button");
+        var el5 = dom.createTextNode("Add");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("button");
+        var el5 = dom.createTextNode("Remove");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("button");
+        var el5 = dom.createTextNode("Up");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("button");
+        var el5 = dom.createTextNode("Down");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("button");
-        var el4 = dom.createTextNode("Remove");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("button");
-        var el4 = dom.createTextNode("Up");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("button");
-        var el4 = dom.createTextNode("Down");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "row");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1493,35 +1503,36 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         var element3 = dom.childAt(fragment, [10]);
         var element4 = dom.childAt(element3, [15]);
         var element5 = dom.childAt(element4, [1]);
-        var element6 = dom.childAt(element4, [3]);
-        var element7 = dom.childAt(element4, [5]);
-        var element8 = dom.childAt(element4, [7]);
-        var element9 = dom.childAt(fragment, [14]);
-        var element10 = dom.childAt(element9, [1, 3, 1]);
-        var element11 = dom.childAt(element9, [3, 3, 1]);
-        var element12 = dom.childAt(element9, [5, 3, 1]);
-        var element13 = dom.childAt(element9, [7, 3, 1]);
-        var element14 = dom.childAt(element9, [9, 3, 1]);
+        var element6 = dom.childAt(element5, [1]);
+        var element7 = dom.childAt(element5, [3]);
+        var element8 = dom.childAt(element5, [5]);
+        var element9 = dom.childAt(element5, [7]);
+        var element10 = dom.childAt(fragment, [14]);
+        var element11 = dom.childAt(element10, [1, 3, 1]);
+        var element12 = dom.childAt(element10, [3, 3, 1]);
+        var element13 = dom.childAt(element10, [5, 3, 1]);
+        var element14 = dom.childAt(element10, [7, 3, 1]);
+        var element15 = dom.childAt(element10, [9, 3, 1]);
         var morphs = new Array(16);
         morphs[0] = dom.createAttrMorph(element1, 'value');
         morphs[1] = dom.createAttrMorph(element2, 'value');
         morphs[2] = dom.createMorphAt(element3, 13, 13);
         morphs[3] = dom.createAttrMorph(element4, 'class');
-        morphs[4] = dom.createElementMorph(element5);
-        morphs[5] = dom.createAttrMorph(element6, 'disabled');
-        morphs[6] = dom.createElementMorph(element6);
-        morphs[7] = dom.createAttrMorph(element7, 'disabled');
-        morphs[8] = dom.createElementMorph(element7);
-        morphs[9] = dom.createAttrMorph(element8, 'disabled');
-        morphs[10] = dom.createElementMorph(element8);
-        morphs[11] = dom.createAttrMorph(element10, 'value');
-        morphs[12] = dom.createAttrMorph(element11, 'value');
-        morphs[13] = dom.createAttrMorph(element12, 'value');
-        morphs[14] = dom.createAttrMorph(element13, 'value');
-        morphs[15] = dom.createAttrMorph(element14, 'value');
+        morphs[4] = dom.createElementMorph(element6);
+        morphs[5] = dom.createAttrMorph(element7, 'disabled');
+        morphs[6] = dom.createElementMorph(element7);
+        morphs[7] = dom.createAttrMorph(element8, 'disabled');
+        morphs[8] = dom.createElementMorph(element8);
+        morphs[9] = dom.createAttrMorph(element9, 'disabled');
+        morphs[10] = dom.createElementMorph(element9);
+        morphs[11] = dom.createAttrMorph(element11, 'value');
+        morphs[12] = dom.createAttrMorph(element12, 'value');
+        morphs[13] = dom.createAttrMorph(element13, 'value');
+        morphs[14] = dom.createAttrMorph(element14, 'value');
+        morphs[15] = dom.createAttrMorph(element15, 'value');
         return morphs;
       },
-      statements: [["attribute", "value", ["get", "athleteName", ["loc", [null, [39, 50], [39, 61]]]]], ["attribute", "value", ["get", "athleteAge", ["loc", [null, [45, 62], [45, 72]]]]], ["block", "each", [["get", "model.workup.workupSetSheet", ["loc", [null, [69, 10], [69, 37]]]]], [], 0, null, ["loc", [null, [69, 2], [76, 11]]]], ["attribute", "class", ["concat", ["row ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [77, 23], [77, 33]]]], "hidden"], [], ["loc", [null, [77, 18], [77, 44]]]]]]], ["element", "action", ["add"], [], ["loc", [null, [78, 12], [78, 28]]]], ["attribute", "disabled", ["get", "isRemoveProhibited", ["loc", [null, [79, 43], [79, 61]]]]], ["element", "action", ["remove"], [], ["loc", [null, [79, 12], [79, 31]]]], ["attribute", "disabled", ["get", "isUpProhibited", ["loc", [null, [80, 39], [80, 53]]]]], ["element", "action", ["up"], [], ["loc", [null, [80, 12], [80, 27]]]], ["attribute", "disabled", ["get", "isDownProhibited", ["loc", [null, [81, 41], [81, 57]]]]], ["element", "action", ["down"], [], ["loc", [null, [81, 12], [81, 29]]]], ["attribute", "value", ["get", "count", ["loc", [null, [89, 62], [89, 67]]]]], ["attribute", "value", ["get", "duration", ["loc", [null, [95, 52], [95, 60]]]]], ["attribute", "value", ["get", "averagePulse", ["loc", [null, [101, 62], [101, 74]]]]], ["attribute", "value", ["get", "estimatedScore", ["loc", [null, [107, 62], [107, 76]]]]], ["attribute", "value", ["get", "actualScore", ["loc", [null, [113, 62], [113, 73]]]]]],
+      statements: [["attribute", "value", ["get", "athleteName", ["loc", [null, [39, 50], [39, 61]]]]], ["attribute", "value", ["get", "athleteAge", ["loc", [null, [45, 62], [45, 72]]]]], ["block", "each", [["get", "model.workup.workupSetSheet", ["loc", [null, [69, 10], [69, 37]]]]], [], 0, null, ["loc", [null, [69, 2], [76, 11]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "isEditMode", ["loc", [null, [77, 19], [77, 29]]]], "hidden"], [], ["loc", [null, [77, 14], [77, 40]]]]]]], ["element", "action", ["add"], [], ["loc", [null, [79, 14], [79, 30]]]], ["attribute", "disabled", ["get", "isRemoveProhibited", ["loc", [null, [80, 45], [80, 63]]]]], ["element", "action", ["remove"], [], ["loc", [null, [80, 14], [80, 33]]]], ["attribute", "disabled", ["get", "isUpProhibited", ["loc", [null, [81, 41], [81, 55]]]]], ["element", "action", ["up"], [], ["loc", [null, [81, 14], [81, 29]]]], ["attribute", "disabled", ["get", "isDownProhibited", ["loc", [null, [82, 43], [82, 59]]]]], ["element", "action", ["down"], [], ["loc", [null, [82, 14], [82, 31]]]], ["attribute", "value", ["get", "count", ["loc", [null, [92, 62], [92, 67]]]]], ["attribute", "value", ["get", "duration", ["loc", [null, [98, 52], [98, 60]]]]], ["attribute", "value", ["get", "averagePulse", ["loc", [null, [104, 62], [104, 74]]]]], ["attribute", "value", ["get", "estimatedScore", ["loc", [null, [110, 62], [110, 76]]]]], ["attribute", "value", ["get", "actualScore", ["loc", [null, [116, 62], [116, 73]]]]]],
       locals: [],
       templates: [child0]
     };
