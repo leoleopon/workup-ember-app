@@ -1,6 +1,6 @@
 <style type="text/css">
   .nfoblock {
-    border: solid 1px #b3b3b3;
+    border: solid 1px #bfbfbf;
   }
   .row {
     margin: 0 0 5px 5px;
@@ -14,17 +14,29 @@
   .hidden {
     display: none;
   }
+  .selected {
+    background-color: #2a8fee;
+  }
+  .editmode input, .editmode select {
+    font-style: italic;
+  }
+  .readonly {
+    background-color: #efefef;
+  }
+  .error {
+    background-color: #ff8080;
+  }
 </style>
-<<h2>Тренировка</h2>
-<<h3>Спортсмен</h3>
+<h2>Тренировка</h2>
+<h3>Спортсмен</h3>
 <div class="nfoblock">
   <div class="row column">
     <div>ФИО</div>
-    {{input value=athleteName readonly=true}}
+    {{input class="readonly" value=athleteName readonly=true}}
   </div>
   <div class="row column">
     <div>Возраст</div>
-    {{input class="textright" value=athleteAge readonly=true}}
+    {{input class="textright readonly" value=athleteAge readonly=true}}
   </div>
 </div>
 <h3>Подходы</h3>
@@ -48,7 +60,12 @@
     <div>Фактическая нагрузка</div>
   </div>
   {{#each model.workup.workupSetSheet as |workupSet|}}
-    {{workup-set model=workupSet onComplete=(action "completeEdit") onCancel=(action "cancelEdit")}}
+    {{workup-set
+      selectedIndex=selectedIndex
+      model=workupSet
+      onComplete=(action "completeEdit")
+      onCancel=(action "cancelEdit")
+      onSelect=(action "select")}}
   {{/each}}
   <div class="row {{if isEditMode 'hidden'}}">
     <button {{action "add"}}>Add</button>
@@ -61,22 +78,22 @@
 <div class="nfoblock">
   <div class="row column">
     <div>К-во подходов</div>
-    {{input class="textright" value=model.workup.workupSetSheet.length readonly=true}}
+    {{input class="textright readonly" value=count readonly=true}}
   </div>
   <div class="row column">
     <div>Продолжительность</div>
-    {{input class="textright" value=summary readonly=true}}
+    {{input class="textright readonly" value=duration readonly=true}}
   </div>
   <div class="row column">
     <div>Средний пульс</div>
-    {{input class="textright" value=athleteAge readonly=true}}
+    {{input class="textright readonly" value=averagePulse readonly=true}}
   </div>
   <div class="row column">
     <div>Плановая нагрузка</div>
-    {{input class="textright" value=athleteAge readonly=true}}
+    {{input class="textright readonly" value=estimatedScore readonly=true}}
   </div>
   <div class="row column">
     <div>Фактическая нагрузка</div>
-    {{input class="textright" value=athleteAge readonly=true}}
+    {{input class="textright readonly" value=actualScore readonly=true}}
   </div>
 </div>

@@ -1,27 +1,27 @@
-{{yield}}
-<div>
-  <div class="row column">{{input value=index readonly=true}}</div>
+<div class="{{if isSelected 'selected'}} {{if isEditMode 'editmode'}}">
+  <div class="row column">{{input class="textright readonly" value=sequence readonly=true}}</div>
   {{#if isEditMode}}
     <div class="row column">
-      <select onchange={{action "exerciseSelected" value="target.value"}}>
+      <select class={{if isNotExerciseValid 'error'}} onchange={{action "exerciseSelected" value="target.value"}}>
+        <option value=""></option>
         {{#each model.exerciseSheet as |exercise|}}
-          <option value={{exercise}}>{{exercise.name}}</option>
+          <option value={{exercise.name}}>{{exercise.name}}</option>
         {{/each}}
       </select>
     </div>
   {{else}}
-    <div class="row column">{{input value=model.exercise.name readonly=true}}</div>
+    <div class="row column">{{input class="readonly" value=model.exercise.name readonly=true}}</div>
   {{/if}}
-  <div class="row column">{{input value=duration readonly=(if isEditMode unefind true)}}</div>
-  <div class="row column">{{input class="textright" value=model.averagePulse readonly=(if isEditMode undefind true)}}</div>
-  <div class="row column">{{input class="textright" value=estimatedScore readonly=true}}</div>
-  <div class="row column">{{input class="textright" value=actualScore readonly=true}}</div>
-  {{#if isEditMode}}
+  <div class="row column">{{input class=(if isNotDurationValid 'error' (if isEditMode '' 'readonly')) value=duration readonly=(if isEditMode unefind true)}}</div>
+  <div class="row column">{{input class=(if isNotAveragePulseValid 'error' (if isEditMode 'textright' 'textright readonly')) value=model.averagePulse readonly=(if isEditMode undefind true)}}</div>
+  <div class="row column">{{input class="textright readonly" value=estimatedScore readonly=true}}</div>
+  <div class="row column">{{input class="textright readonly" value=actualScore readonly=true}}</div>
+</div>
+{{#if isEditMode}}
   <div>
     <div class="row">
       <button {{action "ok"}}>Ok</button>
       <button {{action "cancel"}}>Cancel</button>
     </div>
   </div>
-  {{/if}}
-</div>
+{{/if}}
