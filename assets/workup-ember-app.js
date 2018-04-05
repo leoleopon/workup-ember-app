@@ -43,9 +43,15 @@ define('workup-ember-app/components/workup-set', ['exports', 'ember', 'workup-em
     isNotValid: _ember['default'].computed('isNotExerciseValid', 'isNotDurationValid', 'isNotAveragePulseValid', function () {
       var result = true;
 
-      if (this.isNotExerciseValid) return result;
-      if (this.isNotDurationValid) return result;
-      if (this.isNotAveragePulseValid) return result;
+      if (this.isNotExerciseValid) {
+        return result;
+      }
+      if (this.isNotDurationValid) {
+        return result;
+      }
+      if (this.isNotAveragePulseValid) {
+        return result;
+      }
 
       return !result;
     }),
@@ -56,6 +62,7 @@ define('workup-ember-app/components/workup-set', ['exports', 'ember', 'workup-em
     sequence: null,
 
     duration: _ember['default'].computed('model.duration', {
+      /* jshint unused:vars */
       get: function get(key) {
         return this.model.duration;
       },
@@ -69,6 +76,7 @@ define('workup-ember-app/components/workup-set', ['exports', 'ember', 'workup-em
       }
     }),
 
+    /* jshint unused:true */
     isEditMode: _ember['default'].computed('model.exerciseSheet', function () {
       return this.model.exerciseSheet !== undefined;
     }),
@@ -78,19 +86,23 @@ define('workup-ember-app/components/workup-set', ['exports', 'ember', 'workup-em
       // on 'model.index' change - so set it here
       this.set('sequence', this.model.index + 1);
 
-      return this.selectedIndex == this.model.index;
+      return this.selectedIndex === this.model.index;
     }),
 
     estimatedScore: _ember['default'].computed('model.{exercise,duration}', function () {
-      if (this.model.exercise === null || this.model.duration === null) return null;
+      if (this.model.exercise === null || this.model.duration === null) {
+        return null;
+      }
 
-      return (0, _workupEmberAppUtilsWorkupSetSummary.getEstimatedScore)(this.model.duration, this.model.exercise.scoreDencity);
+      return Math.round((0, _workupEmberAppUtilsWorkupSetSummary.getEstimatedScore)(this.model.duration, this.model.exercise.scoreDencity) * 1000) / 1000;
     }),
 
     actualScore: _ember['default'].computed('model.{duration,averagePulse}', function () {
-      if (this.model.duration === null || this.model.averagePulse === null) return null;
+      if (this.model.duration === null || this.model.averagePulse === null) {
+        return null;
+      }
 
-      return (0, _workupEmberAppUtilsWorkupSetSummary.getActualScore)(this.model.duration, this.model.averagePulse);
+      return Math.round((0, _workupEmberAppUtilsWorkupSetSummary.getActualScore)(this.model.duration, this.model.averagePulse) * 1000) / 1000;
     }),
 
     actions: {
@@ -100,11 +112,19 @@ define('workup-ember-app/components/workup-set', ['exports', 'ember', 'workup-em
         this.set('isNotDurationValid', true);
         this.set('isNotAveragePulseValid', true);
 
-        if (this.model.exercise) this.set('isNotExerciseValid', false);
-        if (this.model.duration && parseInt(this.model.duration).toString() == this.model.duration) this.set('isNotDurationValid', false);
-        if (this.model.averagePulse && parseInt(this.model.averagePulse).toString() == this.model.averagePulse) this.set('isNotAveragePulseValid', false);
+        if (this.model.exercise) {
+          this.set('isNotExerciseValid', false);
+        }
+        if (this.model.duration && parseInt(this.model.duration).toString() === this.model.duration.toString()) {
+          this.set('isNotDurationValid', false);
+        }
+        if (this.model.averagePulse && parseInt(this.model.averagePulse).toString() === this.model.averagePulse) {
+          this.set('isNotAveragePulseValid', false);
+        }
 
-        if (this.get('isNotValid')) return;
+        if (this.get('isNotValid')) {
+          return;
+        }
 
         this.get('onComplete')();
         this.set('model.exerciseSheet', undefined);
@@ -120,7 +140,9 @@ define('workup-ember-app/components/workup-set', ['exports', 'ember', 'workup-em
       }
     },
     click: function click() {
-      if (this.get('isSelected')) return;
+      if (this.get('isSelected')) {
+        return;
+      }
 
       this.get('onSelect')(this.model.index);
     }
@@ -176,8 +198,8 @@ define('workup-ember-app/controllers/workup', ['exports', 'ember', 'workup-ember
       this.set('count', summary.count);
       this.set('duration', summary.duration);
       this.set('averagePulse', summary.averagePulse);
-      this.set('estimatedScore', summary.estimatedScore);
-      this.set('actualScore', summary.actualScore);
+      this.set('estimatedScore', Math.round(summary.estimatedScore * 10) / 10);
+      this.set('actualScore', Math.round(summary.actualScore * 10) / 10);
     },
 
     actions: {
@@ -189,12 +211,16 @@ define('workup-ember-app/controllers/workup', ['exports', 'ember', 'workup-ember
       },
 
       remove: function remove() {
-        if (this.selectedIndex < 0) return;
+        if (this.selectedIndex < 0) {
+          return;
+        }
 
         var sheet = this.model.workup.workupSetSheet;
         sheet.removeAt(this.selectedIndex);
 
-        if (this.selectedIndex > sheet.length - 1) this.set('selectedIndex', this.selectedIndex - 1);else {
+        if (this.selectedIndex > sheet.length - 1) {
+          this.set('selectedIndex', this.selectedIndex - 1);
+        } else {
           // sheet.removeAt() not triggering computing of isDownProhibited
           // on 'model.workup.workupSetSheet' array change - so wank selectedIndex to trigger it
           this.set('selectedIndex', this.selectedIndex - 1);
@@ -202,13 +228,19 @@ define('workup-ember-app/controllers/workup', ['exports', 'ember', 'workup-ember
         }
 
         // reindex collection
-        if (this.selectedIndex > -1) for (var i = this.selectedIndex; i < sheet.length; i++) {
-          sheet.set(i + '.index', i);
-        }this.getSummary();
+        if (this.selectedIndex > -1) {
+          for (var i = this.selectedIndex; i < sheet.length; i++) {
+            sheet.set(i + '.index', i);
+          }
+        }
+
+        this.getSummary();
       },
 
       up: function up() {
-        if (this.selectedIndex < 1) return;
+        if (this.selectedIndex < 1) {
+          return;
+        }
 
         var sheet = this.get('model').workup.workupSetSheet;
         var buf = sheet.objectAt(this.selectedIndex);
@@ -218,12 +250,16 @@ define('workup-ember-app/controllers/workup', ['exports', 'ember', 'workup-ember
 
         for (var i = this.selectedIndex - 1; i < this.selectedIndex + 1; i++) {
           sheet.set(i + '.index', i);
-        }this.set('selectedIndex', this.selectedIndex - 1);
+        }
+
+        this.set('selectedIndex', this.selectedIndex - 1);
       },
 
       down: function down() {
         var sheet = this.get('model').workup.workupSetSheet;
-        if (this.selectedIndex < 0 || this.selectedIndex >= sheet.length) return;
+        if (this.selectedIndex < 0 || this.selectedIndex >= sheet.length) {
+          return;
+        }
 
         var buf = sheet.objectAt(this.selectedIndex);
 
@@ -248,7 +284,9 @@ define('workup-ember-app/controllers/workup', ['exports', 'ember', 'workup-ember
       },
 
       select: function select(index) {
-        if (this.get('isEditMode')) return;
+        if (this.get('isEditMode')) {
+          return;
+        }
 
         this.set('selectedIndex', index);
       }
@@ -649,11 +687,11 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
             "loc": {
               "source": null,
               "start": {
-                "line": 7,
+                "line": 9,
                 "column": 8
               },
               "end": {
-                "line": 9,
+                "line": 11,
                 "column": 8
               }
             },
@@ -676,13 +714,13 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element3 = dom.childAt(fragment, [1]);
+            var element8 = dom.childAt(fragment, [1]);
             var morphs = new Array(2);
-            morphs[0] = dom.createAttrMorph(element3, 'value');
-            morphs[1] = dom.createMorphAt(element3, 0, 0);
+            morphs[0] = dom.createAttrMorph(element8, 'value');
+            morphs[1] = dom.createMorphAt(element8, 0, 0);
             return morphs;
           },
-          statements: [["attribute", "value", ["get", "exercise.name", ["loc", [null, [8, 26], [8, 39]]]]], ["content", "exercise.name", ["loc", [null, [8, 42], [8, 59]]]]],
+          statements: [["attribute", "value", ["get", "exercise.name", ["loc", [null, [10, 26], [10, 39]]]]], ["content", "exercise.name", ["loc", [null, [10, 42], [10, 59]]]]],
           locals: ["exercise"],
           templates: []
         };
@@ -694,11 +732,11 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           "loc": {
             "source": null,
             "start": {
-              "line": 3,
+              "line": 5,
               "column": 2
             },
             "end": {
-              "line": 12,
+              "line": 16,
               "column": 2
             }
           },
@@ -732,19 +770,35 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1, "class", "row column");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1, "class", "row column");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element4 = dom.childAt(fragment, [1, 1]);
-          var morphs = new Array(3);
-          morphs[0] = dom.createAttrMorph(element4, 'class');
-          morphs[1] = dom.createAttrMorph(element4, 'onchange');
-          morphs[2] = dom.createMorphAt(element4, 3, 3);
+          var element9 = dom.childAt(fragment, [1, 1]);
+          var morphs = new Array(5);
+          morphs[0] = dom.createAttrMorph(element9, 'class');
+          morphs[1] = dom.createAttrMorph(element9, 'onchange');
+          morphs[2] = dom.createMorphAt(element9, 3, 3);
+          morphs[3] = dom.createMorphAt(dom.childAt(fragment, [3]), 0, 0);
+          morphs[4] = dom.createMorphAt(dom.childAt(fragment, [5]), 0, 0);
           return morphs;
         },
-        statements: [["attribute", "class", ["subexpr", "if", [["get", "isNotExerciseValid", ["loc", [null, [5, 25], [5, 43]]]], "error"], [], ["loc", [null, [5, 20], [5, 53]]]]], ["attribute", "onchange", ["subexpr", "action", ["exerciseSelected"], ["value", "target.value"], ["loc", [null, [5, 63], [5, 113]]]]], ["block", "each", [["get", "model.exerciseSheet", ["loc", [null, [7, 16], [7, 35]]]]], [], 0, null, ["loc", [null, [7, 8], [9, 17]]]]],
+        statements: [["attribute", "class", ["subexpr", "if", [["get", "isNotExerciseValid", ["loc", [null, [7, 25], [7, 43]]]], "error1"], [], ["loc", [null, [7, 20], [7, 54]]]]], ["attribute", "onchange", ["subexpr", "action", ["exerciseSelected"], ["value", "target.value"], ["loc", [null, [7, 64], [7, 114]]]]], ["block", "each", [["get", "model.exerciseSheet", ["loc", [null, [9, 16], [9, 35]]]]], [], 0, null, ["loc", [null, [9, 8], [11, 17]]]], ["inline", "input", [], ["class", ["subexpr", "if", [["get", "isNotDurationValid", ["loc", [null, [14, 46], [14, 64]]]], "error1"], [], ["loc", [null, [14, 42], [14, 74]]]], "value", ["subexpr", "@mut", [["get", "duration", ["loc", [null, [14, 81], [14, 89]]]]], [], []]], ["loc", [null, [14, 28], [14, 91]]]], ["inline", "input", [], ["class", ["subexpr", "if", [["get", "isNotAveragePulseValid", ["loc", [null, [15, 46], [15, 68]]]], "textright error1", "textright"], [], ["loc", [null, [15, 42], [15, 100]]]], "value", ["subexpr", "@mut", [["get", "model.averagePulse", ["loc", [null, [15, 107], [15, 125]]]]], [], []]], ["loc", [null, [15, 28], [15, 127]]]]],
         locals: [],
         templates: [child0]
       };
@@ -757,11 +811,11 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           "loc": {
             "source": null,
             "start": {
-              "line": 12,
+              "line": 16,
               "column": 2
             },
             "end": {
-              "line": 14,
+              "line": 26,
               "column": 2
             }
           },
@@ -776,8 +830,36 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           var el1 = dom.createTextNode("    ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
-          dom.setAttribute(el1, "class", "row column");
-          var el2 = dom.createComment("");
+          dom.setAttribute(el1, "class", "ui input");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("input");
+          dom.setAttribute(el2, "type", "text");
+          dom.setAttribute(el2, "readonly", "true");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("input");
+          dom.setAttribute(el2, "type", "number");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("input");
+          dom.setAttribute(el2, "type", "number");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -785,11 +867,25 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
+          var element3 = dom.childAt(fragment, [1, 1]);
+          var element4 = dom.childAt(fragment, [3]);
+          var element5 = dom.childAt(element4, [1]);
+          var element6 = dom.childAt(fragment, [5]);
+          var element7 = dom.childAt(element6, [1]);
+          var morphs = new Array(10);
+          morphs[0] = dom.createAttrMorph(element3, 'class');
+          morphs[1] = dom.createAttrMorph(element3, 'value');
+          morphs[2] = dom.createAttrMorph(element4, 'class');
+          morphs[3] = dom.createAttrMorph(element5, 'class');
+          morphs[4] = dom.createAttrMorph(element5, 'value');
+          morphs[5] = dom.createAttrMorph(element5, 'readonly');
+          morphs[6] = dom.createAttrMorph(element6, 'class');
+          morphs[7] = dom.createAttrMorph(element7, 'class');
+          morphs[8] = dom.createAttrMorph(element7, 'value');
+          morphs[9] = dom.createAttrMorph(element7, 'readonly');
           return morphs;
         },
-        statements: [["inline", "input", [], ["class", "readonly", "value", ["subexpr", "@mut", [["get", "model.exercise.name", ["loc", [null, [13, 59], [13, 78]]]]], [], []], "readonly", true], ["loc", [null, [13, 28], [13, 94]]]]],
+        statements: [["attribute", "class", ["concat", ["column ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [18, 32], [18, 42]]]], "", "readonly"], [], ["loc", [null, [18, 27], [18, 58]]]]]]], ["attribute", "value", ["get", "model.exercise.name", ["loc", [null, [18, 80], [18, 99]]]]], ["attribute", "class", ["concat", ["ui input ", ["subexpr", "if", [["get", "isNotDurationValid", ["loc", [null, [20, 30], [20, 48]]]], "error"], [], ["loc", [null, [20, 25], [20, 58]]]]]]], ["attribute", "class", ["concat", ["column ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [21, 32], [21, 42]]]], "", "readonly"], [], ["loc", [null, [21, 27], [21, 58]]]]]]], ["attribute", "value", ["get", "duration", ["loc", [null, [21, 82], [21, 90]]]]], ["attribute", "readonly", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [21, 107], [21, 117]]]], ["get", "unefind", ["loc", [null, [21, 118], [21, 125]]]], true], [], ["loc", [null, [21, 102], [21, 132]]]]], ["attribute", "class", ["concat", ["ui input ", ["subexpr", "if", [["get", "isNotDurationValid", ["loc", [null, [23, 30], [23, 48]]]], "error"], [], ["loc", [null, [23, 25], [23, 58]]]]]]], ["attribute", "class", ["concat", ["column textright ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [24, 42], [24, 52]]]], "", "readonly"], [], ["loc", [null, [24, 37], [24, 68]]]]]]], ["attribute", "value", ["get", "model.averagePulse", ["loc", [null, [24, 92], [24, 110]]]]], ["attribute", "readonly", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [24, 127], [24, 137]]]], ["get", "unefind", ["loc", [null, [24, 138], [24, 145]]]], true], [], ["loc", [null, [24, 122], [24, 152]]]]]],
         locals: [],
         templates: []
       };
@@ -802,11 +898,11 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           "loc": {
             "source": null,
             "start": {
-              "line": 20,
+              "line": 34,
               "column": 0
             },
             "end": {
-              "line": 27,
+              "line": 41,
               "column": 0
             }
           },
@@ -821,25 +917,26 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
-          var el2 = dom.createTextNode("\n    ");
+          dom.setAttribute(el1, "class", "column");
+          var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2, "class", "row");
-          var el3 = dom.createTextNode("\n      ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("button");
-          var el4 = dom.createTextNode("Ok");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n      ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("button");
-          var el4 = dom.createTextNode("Cancel");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n    ");
+          var el2 = dom.createElement("button");
+          var el3 = dom.createTextNode("Ok");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("button");
+          var el3 = dom.createTextNode("Cancel");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n  ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1, "class", "row");
           var el2 = dom.createTextNode("\n  ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
@@ -848,7 +945,7 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element0 = dom.childAt(fragment, [1, 1]);
+          var element0 = dom.childAt(fragment, [1]);
           var element1 = dom.childAt(element0, [1]);
           var element2 = dom.childAt(element0, [3]);
           var morphs = new Array(2);
@@ -856,7 +953,7 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
           morphs[1] = dom.createElementMorph(element2);
           return morphs;
         },
-        statements: [["element", "action", ["ok"], [], ["loc", [null, [23, 14], [23, 29]]]], ["element", "action", ["cancel"], [], ["loc", [null, [24, 14], [24, 33]]]]],
+        statements: [["element", "action", ["ok"], [], ["loc", [null, [36, 14], [36, 29]]]], ["element", "action", ["cancel"], [], ["loc", [null, [37, 14], [37, 33]]]]],
         locals: [],
         templates: []
       };
@@ -875,7 +972,7 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
             "column": 0
           },
           "end": {
-            "line": 28,
+            "line": 42,
             "column": 0
           }
         },
@@ -891,8 +988,15 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2, "class", "row column");
-        var el3 = dom.createComment("");
+        dom.setAttribute(el2, "class", "ui input");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("input");
+        dom.setAttribute(el3, "class", "column textright readonly");
+        dom.setAttribute(el3, "type", "number");
+        dom.setAttribute(el3, "readonly", "true");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -902,29 +1006,29 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
         var el2 = dom.createTextNode("  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2, "class", "row column");
-        var el3 = dom.createComment("");
+        dom.setAttribute(el2, "class", "ui input");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("input");
+        dom.setAttribute(el3, "class", "column textright readonly");
+        dom.setAttribute(el3, "type", "number");
+        dom.setAttribute(el3, "readonly", "true");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2, "class", "row column");
-        var el3 = dom.createComment("");
+        dom.setAttribute(el2, "class", "ui input");
+        var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2, "class", "row column");
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("input");
+        dom.setAttribute(el3, "class", "column textright readonly");
+        dom.setAttribute(el3, "type", "number");
+        dom.setAttribute(el3, "readonly", "true");
         dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2, "class", "row column");
-        var el3 = dom.createComment("");
+        var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -937,20 +1041,21 @@ define("workup-ember-app/templates/components/workup-set", ["exports"], function
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element5 = dom.childAt(fragment, [0]);
-        var morphs = new Array(8);
-        morphs[0] = dom.createAttrMorph(element5, 'class');
-        morphs[1] = dom.createMorphAt(dom.childAt(element5, [1]), 0, 0);
-        morphs[2] = dom.createMorphAt(element5, 3, 3);
-        morphs[3] = dom.createMorphAt(dom.childAt(element5, [5]), 0, 0);
-        morphs[4] = dom.createMorphAt(dom.childAt(element5, [7]), 0, 0);
-        morphs[5] = dom.createMorphAt(dom.childAt(element5, [9]), 0, 0);
-        morphs[6] = dom.createMorphAt(dom.childAt(element5, [11]), 0, 0);
-        morphs[7] = dom.createMorphAt(fragment, 2, 2, contextualElement);
+        var element10 = dom.childAt(fragment, [0]);
+        var element11 = dom.childAt(element10, [1, 1]);
+        var element12 = dom.childAt(element10, [5, 1]);
+        var element13 = dom.childAt(element10, [7, 1]);
+        var morphs = new Array(6);
+        morphs[0] = dom.createAttrMorph(element10, 'class');
+        morphs[1] = dom.createAttrMorph(element11, 'value');
+        morphs[2] = dom.createMorphAt(element10, 3, 3);
+        morphs[3] = dom.createAttrMorph(element12, 'value');
+        morphs[4] = dom.createAttrMorph(element13, 'value');
+        morphs[5] = dom.createMorphAt(fragment, 2, 2, contextualElement);
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", [["subexpr", "if", [["get", "isSelected", ["loc", [null, [1, 17], [1, 27]]]], "selected"], [], ["loc", [null, [1, 12], [1, 40]]]], " ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [1, 46], [1, 56]]]], "editmode"], [], ["loc", [null, [1, 41], [1, 69]]]]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "sequence", ["loc", [null, [2, 67], [2, 75]]]]], [], []], "readonly", true], ["loc", [null, [2, 26], [2, 91]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [3, 8], [3, 18]]]]], [], 0, 1, ["loc", [null, [3, 2], [14, 9]]]], ["inline", "input", [], ["class", ["subexpr", "if", [["get", "isNotDurationValid", ["loc", [null, [15, 44], [15, 62]]]], "error", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [15, 75], [15, 85]]]], "", "readonly"], [], ["loc", [null, [15, 71], [15, 100]]]]], [], ["loc", [null, [15, 40], [15, 101]]]], "value", ["subexpr", "@mut", [["get", "duration", ["loc", [null, [15, 108], [15, 116]]]]], [], []], "readonly", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [15, 130], [15, 140]]]], ["get", "unefind", ["loc", [null, [15, 141], [15, 148]]]], true], [], ["loc", [null, [15, 126], [15, 154]]]]], ["loc", [null, [15, 26], [15, 156]]]], ["inline", "input", [], ["class", ["subexpr", "if", [["get", "isNotAveragePulseValid", ["loc", [null, [16, 44], [16, 66]]]], "error", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [16, 79], [16, 89]]]], "textright", "textright readonly"], [], ["loc", [null, [16, 75], [16, 123]]]]], [], ["loc", [null, [16, 40], [16, 124]]]], "value", ["subexpr", "@mut", [["get", "model.averagePulse", ["loc", [null, [16, 131], [16, 149]]]]], [], []], "readonly", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [16, 163], [16, 173]]]], ["get", "undefind", ["loc", [null, [16, 174], [16, 182]]]], true], [], ["loc", [null, [16, 159], [16, 188]]]]], ["loc", [null, [16, 26], [16, 190]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "estimatedScore", ["loc", [null, [17, 67], [17, 81]]]]], [], []], "readonly", true], ["loc", [null, [17, 26], [17, 97]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "actualScore", ["loc", [null, [18, 67], [18, 78]]]]], [], []], "readonly", true], ["loc", [null, [18, 26], [18, 94]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [20, 6], [20, 16]]]]], [], 2, null, ["loc", [null, [20, 0], [27, 7]]]]],
+      statements: [["attribute", "class", ["concat", ["row ", ["subexpr", "if", [["get", "isSelected", ["loc", [null, [1, 21], [1, 31]]]], "selected"], [], ["loc", [null, [1, 16], [1, 44]]]], " ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [1, 50], [1, 60]]]], "editmode"], [], ["loc", [null, [1, 45], [1, 73]]]]]]], ["attribute", "value", ["get", "sequence", ["loc", [null, [3, 67], [3, 75]]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [5, 8], [5, 18]]]]], [], 0, 1, ["loc", [null, [5, 2], [26, 9]]]], ["attribute", "value", ["get", "estimatedScore", ["loc", [null, [28, 67], [28, 81]]]]], ["attribute", "value", ["get", "actualScore", ["loc", [null, [31, 67], [31, 78]]]]], ["block", "if", [["get", "isEditMode", ["loc", [null, [34, 6], [34, 16]]]]], [], 2, null, ["loc", [null, [34, 0], [41, 7]]]]],
       locals: [],
       templates: [child0, child1, child2]
     };
@@ -966,11 +1071,11 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 62,
+              "line": 69,
               "column": 2
             },
             "end": {
-              "line": 69,
+              "line": 76,
               "column": 2
             }
           },
@@ -995,7 +1100,7 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "workup-set", [], ["selectedIndex", ["subexpr", "@mut", [["get", "selectedIndex", ["loc", [null, [64, 20], [64, 33]]]]], [], []], "model", ["subexpr", "@mut", [["get", "workupSet", ["loc", [null, [65, 12], [65, 21]]]]], [], []], "onComplete", ["subexpr", "action", ["completeEdit"], [], ["loc", [null, [66, 17], [66, 40]]]], "onCancel", ["subexpr", "action", ["cancelEdit"], [], ["loc", [null, [67, 15], [67, 36]]]], "onSelect", ["subexpr", "action", ["select"], [], ["loc", [null, [68, 15], [68, 32]]]]], ["loc", [null, [63, 4], [68, 34]]]]],
+        statements: [["inline", "workup-set", [], ["selectedIndex", ["subexpr", "@mut", [["get", "selectedIndex", ["loc", [null, [71, 20], [71, 33]]]]], [], []], "model", ["subexpr", "@mut", [["get", "workupSet", ["loc", [null, [72, 12], [72, 21]]]]], [], []], "onComplete", ["subexpr", "action", ["completeEdit"], [], ["loc", [null, [73, 17], [73, 40]]]], "onCancel", ["subexpr", "action", ["cancelEdit"], [], ["loc", [null, [74, 15], [74, 36]]]], "onSelect", ["subexpr", "action", ["select"], [], ["loc", [null, [75, 15], [75, 32]]]]], ["loc", [null, [70, 4], [75, 34]]]]],
         locals: ["workupSet"],
         templates: []
       };
@@ -1014,7 +1119,7 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 100,
+            "line": 117,
             "column": 0
           }
         },
@@ -1028,7 +1133,7 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("style");
         dom.setAttribute(el1, "type", "text/css");
-        var el2 = dom.createTextNode("\n  .nfoblock {\n    border: solid 1px #bfbfbf;\n  }\n  .row {\n    margin: 0 0 5px 5px;\n  }\n  .column {\n    display: inline-block;\n  }\n  .textright {\n    text-align: right;\n  }\n  .hidden {\n    display: none;\n  }\n  .selected {\n    background-color: #2a8fee;\n  }\n  .editmode input, .editmode select {\n    font-style: italic;\n  }\n  .readonly {\n    background-color: #efefef;\n  }\n  .error {\n    background-color: #ff8080;\n  }\n");
+        var el2 = dom.createTextNode("\n  .nfoblock {\n    border: solid 1px #bfbfbf;\n  }\n  .row {\n    margin: 0 5px 0 5px;\n    padding: 0 3px 3px 0;\n  }\n  .column {\n    display: inline-block;\n    margin: 5px 0 0 5px !important;\n  }\n  .textright {\n    text-align: right !important;\n  }\n  .hidden {\n    display: none;\n  }\n  .selected {\n    background-color: #2a8fee;\n  }\n  .editmode input, .editmode select {\n    font-style: italic;\n  }\n  .readonly {\n    background-color: #efefef !important;\n  }\n  .error1 {\n    background-color: #ff8080;\n  }\n\n");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
@@ -1059,7 +1164,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "readonly");
+        dom.setAttribute(el4, "type", "text");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1076,7 +1191,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "textright readonly");
+        dom.setAttribute(el4, "type", "number");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1231,7 +1356,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "textright readonly");
+        dom.setAttribute(el4, "type", "number");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1248,7 +1383,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "readonly");
+        dom.setAttribute(el4, "type", "number");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1265,7 +1410,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "textright readonly");
+        dom.setAttribute(el4, "type", "number");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1282,7 +1437,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "textright readonly");
+        dom.setAttribute(el4, "type", "number");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1299,7 +1464,17 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("input");
+        dom.setAttribute(el4, "class", "textright readonly");
+        dom.setAttribute(el4, "type", "number");
+        dom.setAttribute(el4, "readonly", "true");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
@@ -1313,33 +1488,40 @@ define("workup-ember-app/templates/workup", ["exports"], function (exports) {
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [6]);
-        var element1 = dom.childAt(fragment, [10]);
-        var element2 = dom.childAt(element1, [15]);
-        var element3 = dom.childAt(element2, [1]);
-        var element4 = dom.childAt(element2, [3]);
-        var element5 = dom.childAt(element2, [5]);
-        var element6 = dom.childAt(element2, [7]);
-        var element7 = dom.childAt(fragment, [14]);
+        var element1 = dom.childAt(element0, [1, 3, 1]);
+        var element2 = dom.childAt(element0, [3, 3, 1]);
+        var element3 = dom.childAt(fragment, [10]);
+        var element4 = dom.childAt(element3, [15]);
+        var element5 = dom.childAt(element4, [1]);
+        var element6 = dom.childAt(element4, [3]);
+        var element7 = dom.childAt(element4, [5]);
+        var element8 = dom.childAt(element4, [7]);
+        var element9 = dom.childAt(fragment, [14]);
+        var element10 = dom.childAt(element9, [1, 3, 1]);
+        var element11 = dom.childAt(element9, [3, 3, 1]);
+        var element12 = dom.childAt(element9, [5, 3, 1]);
+        var element13 = dom.childAt(element9, [7, 3, 1]);
+        var element14 = dom.childAt(element9, [9, 3, 1]);
         var morphs = new Array(16);
-        morphs[0] = dom.createMorphAt(dom.childAt(element0, [1]), 3, 3);
-        morphs[1] = dom.createMorphAt(dom.childAt(element0, [3]), 3, 3);
-        morphs[2] = dom.createMorphAt(element1, 13, 13);
-        morphs[3] = dom.createAttrMorph(element2, 'class');
-        morphs[4] = dom.createElementMorph(element3);
-        morphs[5] = dom.createAttrMorph(element4, 'disabled');
-        morphs[6] = dom.createElementMorph(element4);
-        morphs[7] = dom.createAttrMorph(element5, 'disabled');
-        morphs[8] = dom.createElementMorph(element5);
-        morphs[9] = dom.createAttrMorph(element6, 'disabled');
-        morphs[10] = dom.createElementMorph(element6);
-        morphs[11] = dom.createMorphAt(dom.childAt(element7, [1]), 3, 3);
-        morphs[12] = dom.createMorphAt(dom.childAt(element7, [3]), 3, 3);
-        morphs[13] = dom.createMorphAt(dom.childAt(element7, [5]), 3, 3);
-        morphs[14] = dom.createMorphAt(dom.childAt(element7, [7]), 3, 3);
-        morphs[15] = dom.createMorphAt(dom.childAt(element7, [9]), 3, 3);
+        morphs[0] = dom.createAttrMorph(element1, 'value');
+        morphs[1] = dom.createAttrMorph(element2, 'value');
+        morphs[2] = dom.createMorphAt(element3, 13, 13);
+        morphs[3] = dom.createAttrMorph(element4, 'class');
+        morphs[4] = dom.createElementMorph(element5);
+        morphs[5] = dom.createAttrMorph(element6, 'disabled');
+        morphs[6] = dom.createElementMorph(element6);
+        morphs[7] = dom.createAttrMorph(element7, 'disabled');
+        morphs[8] = dom.createElementMorph(element7);
+        morphs[9] = dom.createAttrMorph(element8, 'disabled');
+        morphs[10] = dom.createElementMorph(element8);
+        morphs[11] = dom.createAttrMorph(element10, 'value');
+        morphs[12] = dom.createAttrMorph(element11, 'value');
+        morphs[13] = dom.createAttrMorph(element12, 'value');
+        morphs[14] = dom.createAttrMorph(element13, 'value');
+        morphs[15] = dom.createAttrMorph(element14, 'value');
         return morphs;
       },
-      statements: [["inline", "input", [], ["class", "readonly", "value", ["subexpr", "@mut", [["get", "athleteName", ["loc", [null, [35, 35], [35, 46]]]]], [], []], "readonly", true], ["loc", [null, [35, 4], [35, 62]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "athleteAge", ["loc", [null, [39, 45], [39, 55]]]]], [], []], "readonly", true], ["loc", [null, [39, 4], [39, 71]]]], ["block", "each", [["get", "model.workup.workupSetSheet", ["loc", [null, [62, 10], [62, 37]]]]], [], 0, null, ["loc", [null, [62, 2], [69, 11]]]], ["attribute", "class", ["concat", ["row ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [70, 23], [70, 33]]]], "hidden"], [], ["loc", [null, [70, 18], [70, 44]]]]]]], ["element", "action", ["add"], [], ["loc", [null, [71, 12], [71, 28]]]], ["attribute", "disabled", ["get", "isRemoveProhibited", ["loc", [null, [72, 43], [72, 61]]]]], ["element", "action", ["remove"], [], ["loc", [null, [72, 12], [72, 31]]]], ["attribute", "disabled", ["get", "isUpProhibited", ["loc", [null, [73, 39], [73, 53]]]]], ["element", "action", ["up"], [], ["loc", [null, [73, 12], [73, 27]]]], ["attribute", "disabled", ["get", "isDownProhibited", ["loc", [null, [74, 41], [74, 57]]]]], ["element", "action", ["down"], [], ["loc", [null, [74, 12], [74, 29]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "count", ["loc", [null, [81, 45], [81, 50]]]]], [], []], "readonly", true], ["loc", [null, [81, 4], [81, 66]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "duration", ["loc", [null, [85, 45], [85, 53]]]]], [], []], "readonly", true], ["loc", [null, [85, 4], [85, 69]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "averagePulse", ["loc", [null, [89, 45], [89, 57]]]]], [], []], "readonly", true], ["loc", [null, [89, 4], [89, 73]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "estimatedScore", ["loc", [null, [93, 45], [93, 59]]]]], [], []], "readonly", true], ["loc", [null, [93, 4], [93, 75]]]], ["inline", "input", [], ["class", "textright readonly", "value", ["subexpr", "@mut", [["get", "actualScore", ["loc", [null, [97, 45], [97, 56]]]]], [], []], "readonly", true], ["loc", [null, [97, 4], [97, 72]]]]],
+      statements: [["attribute", "value", ["get", "athleteName", ["loc", [null, [39, 50], [39, 61]]]]], ["attribute", "value", ["get", "athleteAge", ["loc", [null, [45, 62], [45, 72]]]]], ["block", "each", [["get", "model.workup.workupSetSheet", ["loc", [null, [69, 10], [69, 37]]]]], [], 0, null, ["loc", [null, [69, 2], [76, 11]]]], ["attribute", "class", ["concat", ["row ", ["subexpr", "if", [["get", "isEditMode", ["loc", [null, [77, 23], [77, 33]]]], "hidden"], [], ["loc", [null, [77, 18], [77, 44]]]]]]], ["element", "action", ["add"], [], ["loc", [null, [78, 12], [78, 28]]]], ["attribute", "disabled", ["get", "isRemoveProhibited", ["loc", [null, [79, 43], [79, 61]]]]], ["element", "action", ["remove"], [], ["loc", [null, [79, 12], [79, 31]]]], ["attribute", "disabled", ["get", "isUpProhibited", ["loc", [null, [80, 39], [80, 53]]]]], ["element", "action", ["up"], [], ["loc", [null, [80, 12], [80, 27]]]], ["attribute", "disabled", ["get", "isDownProhibited", ["loc", [null, [81, 41], [81, 57]]]]], ["element", "action", ["down"], [], ["loc", [null, [81, 12], [81, 29]]]], ["attribute", "value", ["get", "count", ["loc", [null, [89, 62], [89, 67]]]]], ["attribute", "value", ["get", "duration", ["loc", [null, [95, 52], [95, 60]]]]], ["attribute", "value", ["get", "averagePulse", ["loc", [null, [101, 62], [101, 74]]]]], ["attribute", "value", ["get", "estimatedScore", ["loc", [null, [107, 62], [107, 76]]]]], ["attribute", "value", ["get", "actualScore", ["loc", [null, [113, 62], [113, 73]]]]]],
       locals: [],
       templates: [child0]
     };
@@ -1385,7 +1567,9 @@ define('workup-ember-app/utils/workup-summary', ['exports', 'workup-ember-app/ut
       actualScore: null
     };
 
-    if (dataArray.length == 0) return result;
+    if (dataArray.length === 0) {
+      return result;
+    }
 
     result.duration = 0;
     result.estimatedScore = 0;
@@ -1394,18 +1578,22 @@ define('workup-ember-app/utils/workup-summary', ['exports', 'workup-ember-app/ut
     var weightedPulse = 0;
 
     dataArray.forEach(function (element) {
-      if (element.duration) result.duration = result.duration + element.duration;
+      if (element.duration) {
+        result.duration = result.duration + element.duration;
+      }
 
       if (element.duration && element.pulse) {
         weightedPulse = weightedPulse + (0, _workupEmberAppUtilsWorkupSetSummary.getWeightedPulse)((0, _workupEmberAppUtilsWorkupSetSummary.getHours)(element.duration), element.pulse);
         result.actualScore = result.actualScore + (0, _workupEmberAppUtilsWorkupSetSummary.getActualScore)(element.duration, element.pulse);
       }
 
-      if (element.duration && element.scoreDencity) result.estimatedScore = result.estimatedScore + (0, _workupEmberAppUtilsWorkupSetSummary.getEstimatedScore)(element.duration, element.scoreDencity);
+      if (element.duration && element.scoreDencity) {
+        result.estimatedScore = result.estimatedScore + (0, _workupEmberAppUtilsWorkupSetSummary.getEstimatedScore)(element.duration, element.scoreDencity);
+      }
     }, this);
 
     result.count = dataArray.length;
-    result.averagePulse = weightedPulse / (0, _workupEmberAppUtilsWorkupSetSummary.getHours)(result.duration);
+    result.averagePulse = Math.round(weightedPulse / (0, _workupEmberAppUtilsWorkupSetSummary.getHours)(result.duration));
 
     return result;
   }
@@ -1444,7 +1632,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("workup-ember-app/app")["default"].create({"name":"workup-ember-app","version":"0.0.0+45b84c94"});
+  require("workup-ember-app/app")["default"].create({"name":"workup-ember-app","version":"0.0.0+b811015b"});
 }
 
 /* jshint ignore:end */

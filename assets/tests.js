@@ -13,7 +13,7 @@ define('workup-ember-app/tests/components/workup-set.jshint', ['exports'], funct
   QUnit.module('JSHint - components/workup-set.js');
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'components/workup-set.js should pass jshint.\ncomponents/workup-set.js: line 19, col 9, Expected \'{\' and instead saw \'return\'.\ncomponents/workup-set.js: line 21, col 9, Expected \'{\' and instead saw \'return\'.\ncomponents/workup-set.js: line 23, col 9, Expected \'{\' and instead saw \'return\'.\ncomponents/workup-set.js: line 34, col 9, \'key\' is defined but never used.\ncomponents/workup-set.js: line 56, col 33, Expected \'===\' and instead saw \'==\'.\ncomponents/workup-set.js: line 61, col 7, Expected \'{\' and instead saw \'return\'.\ncomponents/workup-set.js: line 68, col 7, Expected \'{\' and instead saw \'return\'.\ncomponents/workup-set.js: line 81, col 9, Expected \'{\' and instead saw \'this\'.\ncomponents/workup-set.js: line 82, col 77, Expected \'===\' and instead saw \'==\'.\ncomponents/workup-set.js: line 83, col 9, Expected \'{\' and instead saw \'this\'.\ncomponents/workup-set.js: line 84, col 85, Expected \'===\' and instead saw \'==\'.\ncomponents/workup-set.js: line 85, col 9, Expected \'{\' and instead saw \'this\'.\ncomponents/workup-set.js: line 88, col 9, Expected \'{\' and instead saw \'return\'.\ncomponents/workup-set.js: line 105, col 7, Expected \'{\' and instead saw \'return\'.\n\n14 errors');
+    assert.ok(true, 'components/workup-set.js should pass jshint.');
   });
 });
 define('workup-ember-app/tests/controllers/workup.jshint', ['exports'], function (exports) {
@@ -22,7 +22,7 @@ define('workup-ember-app/tests/controllers/workup.jshint', ['exports'], function
   QUnit.module('JSHint - controllers/workup.js');
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/workup.js should pass jshint.\ncontrollers/workup.js: line 68, col 9, Expected \'{\' and instead saw \'return\'.\ncontrollers/workup.js: line 74, col 9, Expected \'{\' and instead saw \'this\'.\ncontrollers/workup.js: line 84, col 9, Expected \'{\' and instead saw \'for\'.\ncontrollers/workup.js: line 85, col 11, Expected \'{\' and instead saw \'sheet\'.\ncontrollers/workup.js: line 92, col 9, Expected \'{\' and instead saw \'return\'.\ncontrollers/workup.js: line 101, col 9, Expected \'{\' and instead saw \'sheet\'.\ncontrollers/workup.js: line 109, col 9, Expected \'{\' and instead saw \'return\'.\ncontrollers/workup.js: line 119, col 9, Expected \'{\' and instead saw \'sheet\'.\ncontrollers/workup.js: line 134, col 9, Expected \'{\' and instead saw \'return\'.\n\n9 errors');
+    assert.ok(true, 'controllers/workup.js should pass jshint.');
   });
 });
 define('workup-ember-app/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
@@ -581,7 +581,7 @@ define('workup-ember-app/tests/utils/workup-set-summary.jshint', ['exports'], fu
   QUnit.module('JSHint - utils/workup-set-summary.js');
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'utils/workup-set-summary.js should pass jshint.\nutils/workup-set-summary.js: line 37, col 71, Missing semicolon.\n\n1 error');
+    assert.ok(true, 'utils/workup-set-summary.js should pass jshint.');
   });
 });
 define('workup-ember-app/tests/utils/workup-summary.jshint', ['exports'], function (exports) {
@@ -590,7 +590,7 @@ define('workup-ember-app/tests/utils/workup-summary.jshint', ['exports'], functi
   QUnit.module('JSHint - utils/workup-summary.js');
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'utils/workup-summary.js should pass jshint.\nutils/workup-summary.js: line 12, col 26, Expected \'===\' and instead saw \'==\'.\nutils/workup-summary.js: line 13, col 5, Expected \'{\' and instead saw \'return\'.\nutils/workup-summary.js: line 23, col 7, Expected \'{\' and instead saw \'result\'.\nutils/workup-summary.js: line 31, col 7, Expected \'{\' and instead saw \'result\'.\nutils/workup-summary.js: line 40, col 20, Missing semicolon.\n\n5 errors');
+    assert.ok(true, 'utils/workup-summary.js should pass jshint.');
   });
 });
 /* jshint ignore:start */
