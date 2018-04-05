@@ -1444,7 +1444,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("workup-ember-app/app")["default"].create({"name":"workup-ember-app","version":"0.0.0+1e22cd3e"});
+  require("workup-ember-app/app")["default"].create({"name":"workup-ember-app","version":"0.0.0+45b84c94"});
 }
 
 /* jshint ignore:end */
