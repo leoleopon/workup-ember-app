@@ -1,27 +1,41 @@
-<div class="{{if isSelected 'selected'}} {{if isEditMode 'editmode'}}">
-  <div class="row column">{{input class="textright readonly" value=sequence readonly=true}}</div>
+<div class="row {{if isSelected 'selected'}} {{if isEditMode 'editmode'}}">
+  <div class="ui input">
+    <input class="column textright readonly" type="number" value={{sequence}} readonly=true />
+  </div>
   {{#if isEditMode}}
     <div class="row column">
-      <select class={{if isNotExerciseValid 'error'}} onchange={{action "exerciseSelected" value="target.value"}}>
+      <select class={{if isNotExerciseValid 'error1'}} onchange={{action "exerciseSelected" value="target.value"}}>
         <option value=""></option>
         {{#each model.exerciseSheet as |exercise|}}
           <option value={{exercise.name}}>{{exercise.name}}</option>
         {{/each}}
       </select>
     </div>
+    <div class="row column">{{input class=(if isNotDurationValid 'error1') value=duration}}</div>
+    <div class="row column">{{input class=(if isNotAveragePulseValid 'textright error1' 'textright') value=model.averagePulse}}</div>
   {{else}}
-    <div class="row column">{{input class="readonly" value=model.exercise.name readonly=true}}</div>
+    <div class="ui input">
+      <input class="column {{if isEditMode '' 'readonly'}}" type="text" value={{model.exercise.name}} readonly=true />
+    </div>
+    <div class="ui input {{if isNotDurationValid 'error'}}">
+      <input class="column {{if isEditMode '' 'readonly'}}" type="number" value={{duration}} readonly={{if isEditMode unefind true}} />
+    </div>
+    <div class="ui input {{if isNotDurationValid 'error'}}">
+      <input class="column textright {{if isEditMode '' 'readonly'}}" type="number" value={{model.averagePulse}} readonly={{if isEditMode unefind true}} />
+    </div>
   {{/if}}
-  <div class="row column">{{input class=(if isNotDurationValid 'error' (if isEditMode '' 'readonly')) value=duration readonly=(if isEditMode unefind true)}}</div>
-  <div class="row column">{{input class=(if isNotAveragePulseValid 'error' (if isEditMode 'textright' 'textright readonly')) value=model.averagePulse readonly=(if isEditMode undefind true)}}</div>
-  <div class="row column">{{input class="textright readonly" value=estimatedScore readonly=true}}</div>
-  <div class="row column">{{input class="textright readonly" value=actualScore readonly=true}}</div>
+  <div class="ui input">
+    <input class="column textright readonly" type="number" value={{estimatedScore}} readonly=true />
+  </div>
+  <div class="ui input">
+    <input class="column textright readonly" type="number" value={{actualScore}} readonly=true />
+  </div>
 </div>
 {{#if isEditMode}}
-  <div>
-    <div class="row">
+  <div class="column">
       <button {{action "ok"}}>Ok</button>
       <button {{action "cancel"}}>Cancel</button>
-    </div>
+  </div>
+  <div class="row">
   </div>
 {{/if}}

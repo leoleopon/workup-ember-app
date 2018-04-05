@@ -3,13 +3,15 @@
     border: solid 1px #bfbfbf;
   }
   .row {
-    margin: 0 0 5px 5px;
+    margin: 0 5px 0 5px;
+    padding: 0 3px 3px 0;
   }
   .column {
     display: inline-block;
+    margin: 5px 0 0 5px !important;
   }
   .textright {
-    text-align: right;
+    text-align: right !important;
   }
   .hidden {
     display: none;
@@ -21,22 +23,27 @@
     font-style: italic;
   }
   .readonly {
-    background-color: #efefef;
+    background-color: #efefef !important;
   }
-  .error {
+  .error1 {
     background-color: #ff8080;
   }
+
 </style>
 <h2>Тренировка</h2>
 <h3>Спортсмен</h3>
 <div class="nfoblock">
   <div class="row column">
     <div>ФИО</div>
-    {{input class="readonly" value=athleteName readonly=true}}
+    <div class="ui input">
+      <input class="readonly" type="text" value={{athleteName}} readonly=true />
+    </div>
   </div>
   <div class="row column">
     <div>Возраст</div>
-    {{input class="textright readonly" value=athleteAge readonly=true}}
+    <div class="ui input">
+      <input class="textright readonly" type="number" value={{athleteAge}} readonly=true />
+    </div>
   </div>
 </div>
 <h3>Подходы</h3>
@@ -78,22 +85,32 @@
 <div class="nfoblock">
   <div class="row column">
     <div>К-во подходов</div>
-    {{input class="textright readonly" value=count readonly=true}}
+    <div class="ui input">
+      <input class="textright readonly" type="number" value={{count}} readonly=true />
+    </div>
   </div>
   <div class="row column">
     <div>Продолжительность</div>
-    {{input class="readonly" value=duration readonly=true}}
+    <div class="ui input">
+      <input class="readonly" type="number" value={{duration}} readonly=true />
+    </div>
   </div>
   <div class="row column">
     <div>Средний пульс</div>
-    {{input class="textright readonly" value=averagePulse readonly=true}}
+    <div class="ui input">
+      <input class="textright readonly" type="number" value={{averagePulse}} readonly=true />
+    </div>
   </div>
   <div class="row column">
     <div>Плановая нагрузка</div>
-    {{input class="textright readonly" value=estimatedScore readonly=true}}
+    <div class="ui input">
+      <input class="textright readonly" type="number" value={{estimatedScore}} readonly=true />
+    </div>
   </div>
   <div class="row column">
     <div>Фактическая нагрузка</div>
-    {{input class="textright readonly" value=actualScore readonly=true}}
+    <div class="ui input">
+      <input class="textright readonly" type="number" value={{actualScore}} readonly=true />
+    </div>
   </div>
 </div>
