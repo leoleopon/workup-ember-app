@@ -9,8 +9,9 @@ function getSummary(dataArray) {
     actualScore: null,
   };
 
-  if (dataArray.length == 0)
+  if (dataArray.length === 0) {
     return result;
+  }
 
   result.duration = 0;
   result.estimatedScore = 0;
@@ -19,22 +20,24 @@ function getSummary(dataArray) {
   let weightedPulse = 0;
 
   dataArray.forEach(function(element) {
-    if (element.duration)
+    if (element.duration) {
       result.duration = result.duration + element.duration;
+    }
 
     if (element.duration && element.pulse) {
       weightedPulse = weightedPulse + getWeightedPulse(getHours(element.duration), element.pulse);
       result.actualScore = result.actualScore + getActualScore(element.duration, element.pulse);
     }
 
-    if (element.duration && element.scoreDencity)
+    if (element.duration && element.scoreDencity) {
       result.estimatedScore = result.estimatedScore + getEstimatedScore(element.duration, element.scoreDencity);
+    }
   }, this);
 
   result.count = dataArray.length;
-  result.averagePulse = weightedPulse / getHours(result.duration);
+  result.averagePulse = Math.round(weightedPulse / getHours(result.duration));
 
   return result;
 }
 
-export {getSummary}
+export {getSummary};

@@ -51,8 +51,8 @@ export default Ember.Controller.extend({
     this.set('count', summary.count);
     this.set('duration', summary.duration);
     this.set('averagePulse', summary.averagePulse);
-    this.set('estimatedScore', summary.estimatedScore);
-    this.set('actualScore', summary.actualScore);
+    this.set('estimatedScore', Math.round(summary.estimatedScore * 10) / 10);
+    this.set('actualScore', Math.round(summary.actualScore * 10) / 10);
   },
 
   actions: {
@@ -64,15 +64,16 @@ export default Ember.Controller.extend({
     },
 
     remove: function() {
-      if (this.selectedIndex < 0)
+      if (this.selectedIndex < 0) {
         return;
+      }
 
       let sheet = this.model.workup.workupSetSheet;
       sheet.removeAt(this.selectedIndex);
 
-      if (this.selectedIndex > sheet.length - 1)
+      if (this.selectedIndex > sheet.length - 1) {
         this.set('selectedIndex', this.selectedIndex - 1);
-      else {
+      } else {
         // sheet.removeAt() not triggering computing of isDownProhibited
         // on 'model.workup.workupSetSheet' array change - so wank selectedIndex to trigger it
         this.set('selectedIndex', this.selectedIndex - 1);
@@ -80,16 +81,19 @@ export default Ember.Controller.extend({
       }
 
       // reindex collection
-      if (this.selectedIndex > -1)
-        for (let i = this.selectedIndex; i < sheet.length; i++)
+      if (this.selectedIndex > -1) {
+        for (let i = this.selectedIndex; i < sheet.length; i++) {
           sheet.set(i + '.index', i);
+        }
+      }
 
       this.getSummary();
     },
 
     up: function() {
-      if (this.selectedIndex < 1)
+      if (this.selectedIndex < 1) {
         return;
+      }
 
       let sheet = this.get('model').workup.workupSetSheet;
       let buf = sheet.objectAt(this.selectedIndex);
@@ -97,16 +101,18 @@ export default Ember.Controller.extend({
       sheet.replace(this.selectedIndex, 1, [sheet.objectAt(this.selectedIndex - 1)]);
       sheet.replace(this.selectedIndex - 1, 1, [buf]);
 
-      for (let i = this.selectedIndex - 1; i < this.selectedIndex + 1; i++)
+      for (let i = this.selectedIndex - 1; i < this.selectedIndex + 1; i++) {
         sheet.set(i + '.index', i);
+      }
 
       this.set('selectedIndex', this.selectedIndex - 1);
     },
 
     down: function() {
       let sheet = this.get('model').workup.workupSetSheet;
-      if (this.selectedIndex < 0 || this.selectedIndex >= sheet.length)
+      if (this.selectedIndex < 0 || this.selectedIndex >= sheet.length) {
         return;
+      }
 
       let buf = sheet.objectAt(this.selectedIndex);
 
@@ -115,8 +121,9 @@ export default Ember.Controller.extend({
 
       this.set('selectedIndex', this.selectedIndex + 1);
 
-      for (let i = this.selectedIndex - 1; i < this.selectedIndex + 1; i++)
+      for (let i = this.selectedIndex - 1; i < this.selectedIndex + 1; i++) {
         sheet.set(i + '.index', i);
+      }
     },
 
     completeEdit: function() {
@@ -130,8 +137,9 @@ export default Ember.Controller.extend({
     },
 
     select: function(index) {
-      if (this.get('isEditMode'))
+      if (this.get('isEditMode')) {
         return;
+      }
 
       this.set('selectedIndex', index);
     },

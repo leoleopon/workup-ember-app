@@ -34,4 +34,4 @@ function getActualScore(duration, pulse) {
   return getHours(duration) * zoneScore[pulseZone];
 }
 
-export {getWeightedPulse, getHours, getEstimatedScore, getActualScore}
+export {getWeightedPulse, getHours, getEstimatedScore, getActualScore};

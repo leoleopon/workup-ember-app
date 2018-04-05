@@ -15,12 +15,15 @@ export default Ember.Component.extend({
     function() {
       let result = true;
 
-      if (this.isNotExerciseValid)
+      if (this.isNotExerciseValid) {
         return result;
-      if (this.isNotDurationValid)
+      }
+      if (this.isNotDurationValid) {
         return result;
-      if (this.isNotAveragePulseValid)
+      }
+      if (this.isNotAveragePulseValid) {
         return result;
+      }
 
       return !result;
   }),
@@ -31,6 +34,7 @@ export default Ember.Component.extend({
   sequence: null,
 
   duration: Ember.computed('model.duration', {
+    /* jshint unused:vars */
     get(key) {
       return this.model.duration;
     },
@@ -42,6 +46,7 @@ export default Ember.Component.extend({
 
       return value;
     },
+    /* jshint unused:true */
   }),
 
   isEditMode: Ember.computed('model.exerciseSheet', function() {
@@ -53,21 +58,23 @@ export default Ember.Component.extend({
     // on 'model.index' change - so set it here
     this.set('sequence', this.model.index + 1);
 
-    return this.selectedIndex == this.model.index;
+    return this.selectedIndex === this.model.index;
   }),
 
   estimatedScore: Ember.computed('model.{exercise,duration}', function() {
-    if (this.model.exercise === null || this.model.duration === null)
+    if (this.model.exercise === null || this.model.duration === null) {
       return null;
+    }
 
-    return getEstimatedScore(this.model.duration, this.model.exercise.scoreDencity);
+    return Math.round(getEstimatedScore(this.model.duration, this.model.exercise.scoreDencity) * 1000) / 1000;
   }),
 
   actualScore: Ember.computed('model.{duration,averagePulse}', function() {
-    if (this.model.duration === null || this.model.averagePulse === null)
+    if (this.model.duration === null || this.model.averagePulse === null) {
       return null;
+    }
 
-    return getActualScore(this.model.duration, this.model.averagePulse);
+    return Math.round(getActualScore(this.model.duration, this.model.averagePulse) * 1000) / 1000;
   }),
 
   actions: {
@@ -77,15 +84,19 @@ export default Ember.Component.extend({
       this.set('isNotDurationValid', true);
       this.set('isNotAveragePulseValid', true);
 
-      if (this.model.exercise)
+      if (this.model.exercise) {
         this.set('isNotExerciseValid', false);
-      if (this.model.duration && parseInt(this.model.duration).toString() == this.model.duration)
+      }
+      if (this.model.duration && parseInt(this.model.duration).toString() === this.model.duration.toString()) {
         this.set('isNotDurationValid', false);
-      if (this.model.averagePulse && parseInt(this.model.averagePulse).toString() == this.model.averagePulse)
+      }
+      if (this.model.averagePulse && parseInt(this.model.averagePulse).toString() === this.model.averagePulse) {
         this.set('isNotAveragePulseValid', false);
+      }
 
-      if (this.get('isNotValid'))
+      if (this.get('isNotValid')) {
         return;
+      }
 
       this.get('onComplete')();
       this.set('model.exerciseSheet', undefined);
@@ -101,8 +112,9 @@ export default Ember.Component.extend({
     },
   },
   click() {
-    if (this.get('isSelected'))
+    if (this.get('isSelected')) {
       return;
+    }
 
     this.get('onSelect')(this.model.index);
   },
