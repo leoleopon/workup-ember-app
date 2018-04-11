@@ -34,4 +34,16 @@ function getActualScore(duration, pulse) {
   return getHours(duration) * zoneScore[pulseZone];
 }
 
-export {getWeightedPulse, getHours, getEstimatedScore, getActualScore};
+function formatDuration(value) {
+  if (!(value)) {
+    return null;
+  }
+
+  let h = Math.trunc(value / (60 * 60));
+  let m = Math.trunc((value - 60 * 60 * h) / 60);
+  let s = value - 60 * 60 * h - 60 * m;
+
+  return `${h < 99 ? ('0' + h).slice(-2) : h}:${('0' + m).slice(-2)}:${('0' + s).slice(-2)}`;
+}
+
+export {getWeightedPulse, getHours, getEstimatedScore, getActualScore, formatDuration};

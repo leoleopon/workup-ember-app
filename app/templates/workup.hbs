@@ -19,7 +19,7 @@
   .selected {
     background-color: #2a8fee;
   }
-  .editmode input, .editmode select {
+  .editmode input, .editmode select, .editmode div {
     font-style: italic;
   }
   .readonly {
@@ -42,7 +42,7 @@
   <div class="row column">
     <div>Возраст</div>
     <div class="ui input">
-      <input class="textright readonly" type="number" value={{athleteAge}} readonly=true />
+      <input class="textright readonly" type="text" value={{athleteAge}} readonly=true />
     </div>
   </div>
 </div>
@@ -74,11 +74,14 @@
       onCancel=(action "cancelEdit")
       onSelect=(action "select")}}
   {{/each}}
-  <div class="row {{if isEditMode 'hidden'}}">
-    <button {{action "add"}}>Add</button>
-    <button {{action "remove"}} disabled={{isRemoveProhibited}}>Remove</button>
-    <button {{action "up"}} disabled={{isUpProhibited}}>Up</button>
-    <button {{action "down"}} disabled={{isDownProhibited}}>Down</button>
+  <div class="{{if isEditMode 'hidden'}}">
+    <div class="column">
+      <button class="ui button" {{action "add"}}>Add</button>
+      <button class="ui button" {{action "remove"}} disabled={{isRemoveProhibited}}>Remove</button>
+      <button class="ui button" {{action "up"}} disabled={{isUpProhibited}}>Up</button>
+      <button class="ui button" {{action "down"}} disabled={{isDownProhibited}}>Down</button>
+    </div>
+    <div class="row" />
   </div>
 </div>
 <h3>Суммарная информация</h3>
@@ -86,31 +89,31 @@
   <div class="row column">
     <div>К-во подходов</div>
     <div class="ui input">
-      <input class="textright readonly" type="number" value={{count}} readonly=true />
+      <input class="textright readonly" type="text" value={{count}} readonly=true />
     </div>
   </div>
   <div class="row column">
     <div>Продолжительность</div>
     <div class="ui input">
-      <input class="readonly" type="number" value={{duration}} readonly=true />
+      <input class="readonly" type="text" value={{duration}} readonly=true />
     </div>
   </div>
   <div class="row column">
     <div>Средний пульс</div>
     <div class="ui input">
-      <input class="textright readonly" type="number" value={{averagePulse}} readonly=true />
+      <input class="textright readonly" type="text" value={{averagePulse}} readonly=true />
     </div>
   </div>
   <div class="row column">
     <div>Плановая нагрузка</div>
     <div class="ui input">
-      <input class="textright readonly" type="number" value={{estimatedScore}} readonly=true />
+      <input class="textright readonly" type="text" value={{estimatedScore}} readonly=true />
     </div>
   </div>
   <div class="row column">
     <div>Фактическая нагрузка</div>
     <div class="ui input">
-      <input class="textright readonly" type="number" value={{actualScore}} readonly=true />
+      <input class="textright readonly" type="text" value={{actualScore}} readonly=true />
     </div>
   </div>
 </div>

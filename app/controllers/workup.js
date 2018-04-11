@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import {getSummary} from '../utils/workup-summary';
+import {formatDuration} from '../utils/workup-set-summary';
 
 export default Ember.Controller.extend({
   isEditMode: false,
@@ -49,10 +50,10 @@ export default Ember.Controller.extend({
     let summary = getSummary(dataArray);
 
     this.set('count', summary.count);
-    this.set('duration', summary.duration);
+    this.set('duration', formatDuration(summary.duration));
     this.set('averagePulse', summary.averagePulse);
-    this.set('estimatedScore', Math.round(summary.estimatedScore * 10) / 10);
-    this.set('actualScore', Math.round(summary.actualScore * 10) / 10);
+    this.set('estimatedScore', summary.estimatedScore === null ? null : summary.estimatedScore.toFixed(1));
+    this.set('actualScore', summary.actualScore === null ? null : summary.actualScore.toFixed(1));
   },
 
   actions: {
